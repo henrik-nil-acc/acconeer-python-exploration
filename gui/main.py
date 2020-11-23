@@ -184,6 +184,7 @@ class GUI(QMainWindow):
         self.setWindowTitle("Acconeer Exploration GUI")
         self.show()
         self.start_up()
+        self.interface_dd.setCurrentIndex(1)
         lib_version_up_to_date(gui_handle=self)
         self.set_gui_state(None, None)
 
@@ -542,16 +543,14 @@ class GUI(QMainWindow):
             in_wsl = False
 
         select = -1
-        if not in_wsl and os.name == "posix":
-            ports = []
-            for i, (port, desc, _) in enumerate(port_infos):
-                if desc.lower() in {"xb112", "xb122"}:
-                    ports.append("{} ({})".format(port, desc))
-                    select = i
-                else:
-                    ports.append(port)
-        else:
-            ports = [port for port, desc, _ in port_infos]
+        ports = []
+
+        for i, port in enumerate(port_infos):
+            if port.serial_number and "FT91FIQ8" in port.serial_number or (not in_wsl and os.name == "posix" and port.description.lower() in {"xb112", "xb122"}):
+                ports.append("{} (S/N:{})".format(port.device, port.serial_number))
+                select = i
+            else:
+                ports.append(port.device)
 
         try:
             if in_wsl:

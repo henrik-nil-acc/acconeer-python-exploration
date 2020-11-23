@@ -56,9 +56,10 @@ def main():
 
 def get_sensor_config():
     config = configs.EnvelopeServiceConfig()
-    config.range_interval = [0.2, 0.8]
+    config.range_interval = [0.5, 1.5]
     config.hw_accelerated_average_samples = 15
-    config.update_rate = 30
+
+    config.update_rate = None
     return config
 
 
